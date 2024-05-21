@@ -16,20 +16,20 @@ app.use(session({
     cookie: {}
 }));
 
-app.use('/', books);
+app.use("/", books);
 app.use('/', lends);
 
 app.post('/login', (req, res) => {
-        const credentials = atob(req.headers.authorization.replace("Basic ", "")).split(":");
-        if (credentials[0] === mail && credentials[1] === password) {
-            req.session.mail = credentials[0];
-            req.session.authenticated = true;
-            res.sendStatus(201);
-        } else {
-            res.send(401);
-        }
+    const credentials = atob(req.headers.authorization.replace("Basic ", "")).split(":");
+    if (credentials[0] === mail && credentials[1] === password) {
+        req.session.mail = credentials[0];
+        req.session.authenticated = true;
+        res.sendStatus(201);
+    } else {
+        res.send(401);
+    }
 });
-  
+
 app.get('/verify', (req, res) => {
     if (req.session.authenticated) {
         res.status(200).json({ email: req.session.mail, statusCode: 200 });
@@ -37,7 +37,7 @@ app.get('/verify', (req, res) => {
         res.status(401).send('Unauthorized');
     }
 });
-  
+
 app.delete('/logout', (req, res) => {
     req.session.authenticated = false;
     req.session.mail = "";
@@ -45,5 +45,5 @@ app.delete('/logout', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+    console.log(`Example app listening on port ${port}`);
 });

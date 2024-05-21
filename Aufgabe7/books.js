@@ -3,34 +3,34 @@ const router = express.Router();
 
 let books = [
     {
-      "isbn": "1",
-      "title": "To Kill a Mockingbird",
-      "year": 1960,
-      "author": "Harper Lee"
+        "isbn": "1",
+        "title": "To Kill a Mockingbird",
+        "year": 1960,
+        "author": "Harper Lee"
     },
     {
-      "isbn": "2",
-      "title": "1984",
-      "year": 1949,
-      "author": "George Orwell"
+        "isbn": "2",
+        "title": "1984",
+        "year": 1949,
+        "author": "George Orwell"
     },
     {
-      "isbn": "3",
-      "title": "The Great Gatsby",
-      "year": 1925,
-      "author": "F. Scott Fitzgerald"
+        "isbn": "3",
+        "title": "The Great Gatsby",
+        "year": 1925,
+        "author": "F. Scott Fitzgerald"
     },
     {
-      "isbn": "4",
-      "title": "The Catcher in the Rye",
-      "year": 1951,
-      "author": "J.D. Salinger"
+        "isbn": "4",
+        "title": "The Catcher in the Rye",
+        "year": 1951,
+        "author": "J.D. Salinger"
     },
     {
-      "isbn": "5",
-      "title": "The Hobbit",
-      "year": 1937,
-      "author": "J.R.R. Tolkien"
+        "isbn": "5",
+        "title": "The Hobbit",
+        "year": 1937,
+        "author": "J.R.R. Tolkien"
     }
 ]
 
@@ -48,7 +48,7 @@ router.get('/books/:isbn', (request, response) => {
 router.post('/books', (request, response) => {
     const newbook = request.body;
 
-    if(newbook.id && newbook.customer_id && newbook.isbn && newbook.borrowed_at) {
+    if (newbook.id && newbook.customer_id && newbook.isbn && newbook.borrowed_at) {
         books.push(newbook);
 
         response.send(books);
@@ -74,7 +74,7 @@ router.put('/books/:isbn', (request, response) => {
 
 router.delete('/books/:isbn', (request, response) => {
     const isbn = request.params.isbn;
-    books = books.filter(book => book.isbn !== isbn);    
+    books = books.filter(book => book.isbn !== isbn);
     response.sendStatus(204);
 });
 

@@ -18,9 +18,9 @@ let lends = [{
 
 const isAuthenticated = (req, res, next) => {
     if (req.session.authenticated) {
-      next();
+        next();
     } else {
-      res.status(401).send('Unauthorized');
+        res.status(401).send('Unauthorized');
     }
 };
 
@@ -53,7 +53,7 @@ router.post('/lends', isAuthenticated, (request, response) => {
 
     if (newlend.id && newlend.customer_id && newlend.isbn && newlend.borrowed_at) {
 
-        if(!existId) {
+        if (!existId) {
             lends.push(newlend);
             response.send(lends);
         } else {
@@ -67,7 +67,7 @@ router.post('/lends', isAuthenticated, (request, response) => {
 router.delete('/lends/:id', isAuthenticated, (request, response) => {
     const id = request.params.id;
 
-    lends = lends.filter(lend => lend.id != id);    
+    lends = lends.filter(lend => lend.id != id);
     response.sendStatus(204);
 });
 
