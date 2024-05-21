@@ -1,7 +1,14 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger-output.json');
+
+app.use('/swagger', swaggerUi.serve);
+app.get('/swagger', swaggerUi.setup(swaggerDocument));
+
 let books = [
     {
       "isbn": "1",
@@ -66,9 +73,15 @@ app.get('/books/:isbn', (request, response) => {
 app.post('/books', (request, response) => {
     const newbook = request.body;
 
-    books.push(newbook);
+    if(newbook.id && newbook.customer_id && newbook.isbn && newbook.borrowed_at) {
+        books.push(newbook);
 
-    response.send(books);
+        response.send(books);
+    } else {
+        response.sendStatus(409);
+    }
+
+
 });
 
 app.put('/books/:isbn', (request, response) => {
@@ -87,7 +100,7 @@ app.put('/books/:isbn', (request, response) => {
 app.delete('/books/:isbn', (request, response) => {
     const isbn = request.params.isbn;
     books = books.filter(book => book.isbn !== isbn);    
-    response.send(books);
+    response.sendStatus(204);
 });
 
 app.patch('/books/:isbn', (request, response) => {
@@ -132,7 +145,7 @@ app.post('/lends', (request, response) => {
 
         if(!existId) {
             lends.push(newlend);
-            response.send(newlend);
+            response.send(lends);
         } else {
             response.sendStatus(400);
         }
@@ -145,9 +158,8 @@ app.delete('/lends/:id', (request, response) => {
     const id = request.params.id;
 
     lends = lends.filter(lend => lend.id != id);    
-    response.send(lends);
+    response.sendStatus(204);
 });
-
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
