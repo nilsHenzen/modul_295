@@ -106,7 +106,7 @@ router.put('/tasks/:id', isAuthenticated, (req, res) => {
         return res.status(404).json({ message: "no task with this id found" });
     }
 
-    if(!updatedTask.title) {
+    if(!updatedTask.title || updatedTask.title == "") {
         console.log("title missing to update task");
         return res.status(400).json({ message: "title missing" });
     }
