@@ -203,7 +203,7 @@
 							"    pm.response.to.have.status(204);\r",
 							"});\r",
 							"\r",
-							"pm.test(\"Fail because id not found\", function () {\r",
+							"pm.test(\"Fail because id not found, 404 status\", function () {\r",
 							"    pm.response.to.have.status(404);\r",
 							"});"
 						],
@@ -256,13 +256,13 @@
 					"type": "basic",
 					"basic": [
 						{
-							"key": "username",
-							"value": "mail@hans.com",
+							"key": "password",
+							"value": "m295",
 							"type": "string"
 						},
 						{
-							"key": "password",
-							"value": "m295",
+							"key": "username",
+							"value": "mail@hans.com",
 							"type": "string"
 						}
 					]
@@ -349,6 +349,45 @@
 					"port": "3000",
 					"path": [
 						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Endpoint not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status Code ist 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Antwort ist nicht gefunden\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.message).to.eql(\"Endpoint not found\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/hello/world",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"hello",
+						"world"
 					]
 				}
 			},
