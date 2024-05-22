@@ -9,6 +9,7 @@
 - npm i
 - nodemon src/server.js / node src/server.js
 - open at http://localhost:3000
+- /swagger to see endpoints
 
 ## Tests
 Tests are writen in postman.
