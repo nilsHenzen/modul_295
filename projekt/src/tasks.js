@@ -36,8 +36,10 @@ const isAuthenticated = (req, res, next) => {
 router.get('/tasks', isAuthenticated, (req, res) => {
     res.setHeader("Content-Type", "application/json");
     if(tasks.length == 0 ){
+        console.log("no tasks found");
         return res.status(500).json({ message: "no tasks found" })
     }
+    console.log("get all tasks");
     res.status(200).send(tasks);
 });
 
@@ -47,14 +49,17 @@ router.post('/tasks', isAuthenticated, (req, res) => {
     res.setHeader("Content-Type", "application/json");
 
     if(!newtask.title) {
+        console.log("title missing");
         return res.status(400).json({ message: "title missing" });
     }
 
     if(!newtask.description) {
+        console.log("description missing");
         return res.status(400).json({ message: "desription missing" });
     }
 
     if(!newtask.creator) {
+        console.log("creator missing");
         return res.status(400).json({ message: "creator missing" });
     }
 
@@ -68,6 +73,7 @@ router.post('/tasks', isAuthenticated, (req, res) => {
     newtask.id = highestId + 1;
     tasks.push(newtask);
 
+    console.log("new task created");
     res.status(201).send(newtask);
 });
 
@@ -78,8 +84,10 @@ router.get('/tasks/:id', isAuthenticated, (req, res) => {
 
     const task = tasks.find(task => task.id == id);
     if(task) {
+        console.log("get single task");
         res.status(200).send(task);
     } else {
+        console.log("task with defined id not found");
         res.status(404).json({ message: "no task with this id found" });
     }
 
@@ -94,18 +102,22 @@ router.put('/tasks/:id', isAuthenticated, (req, res) => {
 
     const findTask = tasks.find(task => task.id == id);
     if(!findTask) {
+        console.log("task with defined id not found");
         return res.status(404).json({ message: "no task with this id found" });
     }
 
     if(!updatedTask.title) {
+        console.log("title missing to update task");
         return res.status(400).json({ message: "title missing" });
     }
 
     if(!updatedTask.description) {
+        console.log("description missing to update task");
         return res.status(400).json({ message: "desription missing" });
     }
 
     if(!updatedTask.creator) {
+        console.log("creator missing to update task");
         return res.status(400).json({ message: "creator missing" });
     }
 
@@ -115,6 +127,8 @@ router.put('/tasks/:id', isAuthenticated, (req, res) => {
         }
         return task;
     });
+
+    console.log("task updated");
     res.status(200).send(updatedTask);
 });
 
@@ -123,11 +137,13 @@ router.delete('/tasks/:id', isAuthenticated, (req, res) => {
 
     const findTask = tasks.find(task => task.id == id);
     if(!findTask) {
+        console.log("no task with defined id found");
         res.setHeader("Content-Type", "application/json");
         return res.status(404).json({ message: "no task with this id found" });
     }
 
     tasks = tasks.filter(task => task.id != id);
+    console.log("deleted task");
     res.sendStatus(204);
 });
 
