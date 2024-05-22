@@ -1,9 +1,5 @@
 const express = require('express');
-const app = express();
-const session = require('express-session');
-const port = 3000;
-const password = "m295";
-const validator = require('validator');
+const router = express.Router();
 
 let tasks = [{
     "id": 1,
@@ -36,17 +32,8 @@ const isAuthenticated = (req, res, next) => {
     }
 };
 
-app.use(express.json());
 
-app.use(session({
-    secret: 'supersecret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {}
-}));
-
-
-app.get('/tasks', isAuthenticated, (req, res) => {
+router.get('/tasks', isAuthenticated, (req, res) => {
     res.setHeader("Content-Type", "application/json");
     if(tasks.length == 0 ){
         return res.status(500).json({ message: "no tasks found" })
@@ -54,7 +41,7 @@ app.get('/tasks', isAuthenticated, (req, res) => {
     res.status(200).send(tasks);
 });
 
-app.post('/tasks', isAuthenticated, (req, res) => {
+router.post('/tasks', isAuthenticated, (req, res) => {
     const newtask = req.body;
 
     res.setHeader("Content-Type", "application/json");
@@ -84,7 +71,7 @@ app.post('/tasks', isAuthenticated, (req, res) => {
     res.status(201).send(newtask);
 });
 
-app.get('/tasks/:id', isAuthenticated, (req, res) => {
+router.get('/tasks/:id', isAuthenticated, (req, res) => {
     const id = req.params.id;
 
     res.setHeader("Content-Type", "application/json");
@@ -98,7 +85,7 @@ app.get('/tasks/:id', isAuthenticated, (req, res) => {
 
 });
 
-app.put('/tasks/:id', isAuthenticated, (req, res) => {
+router.put('/tasks/:id', isAuthenticated, (req, res) => {
     const updatedTask = req.body;
     const id = req.params.id;
     updatedTask.id = id;
@@ -110,6 +97,18 @@ app.put('/tasks/:id', isAuthenticated, (req, res) => {
         return res.status(404).json({ message: "no task with this id found" });
     }
 
+    if(!updatedTask.title) {
+        return res.status(400).json({ message: "title missing" });
+    }
+
+    if(!updatedTask.description) {
+        return res.status(400).json({ message: "desription missing" });
+    }
+
+    if(!updatedTask.creator) {
+        return res.status(400).json({ message: "creator missing" });
+    }
+
     tasks = tasks.map(task => {
         if (task.id == id) {
             return { ...task, ...updatedTask };
@@ -119,7 +118,7 @@ app.put('/tasks/:id', isAuthenticated, (req, res) => {
     res.status(200).send(updatedTask);
 });
 
-app.delete('/tasks/:id', isAuthenticated, (req, res) => {
+router.delete('/tasks/:id', isAuthenticated, (req, res) => {
     const id = req.params.id;
 
     const findTask = tasks.find(task => task.id == id);
@@ -132,35 +131,4 @@ app.delete('/tasks/:id', isAuthenticated, (req, res) => {
     res.sendStatus(204);
 });
 
-app.post('/login', (req, res) => {
-    const credentials = atob(req.headers.authorization.replace("Basic ", "")).split(":");
-    res.setHeader("Content-Type", "application/json");
-    if (validator.isEmail(credentials[0]) && credentials[1] === password) {
-        req.session.mail = credentials[0];
-        req.session.authenticated = true;
-        res.status(201).json({ message: "succesfully logged in" });
-    } else {
-        res.status(401).json({ message: "wrong credentials" });
-    }
-});
-
-app.get('/verify', (req, res) => {
-    res.setHeader("Content-Type", "application/json");
-    if (req.session.authenticated) {
-        res.status(200).json({ email: req.session.mail, session: "valid" });
-    } else {
-        res.status(401).json({ message: "not logged in" });
-    }
-});
-
-app.delete('/logout', (req, res) => {
-    req.session.authenticated = false;
-    req.session.mail = "";
-    res.status(204).send();
-});
-
-
-
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
-});
+module.exports = router;
