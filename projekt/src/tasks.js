@@ -48,7 +48,7 @@ router.post('/tasks', isAuthenticated, (req, res) => {
 
     res.setHeader("Content-Type", "application/json");
 
-    if(!newtask.title) {
+    if(!newtask.title || newtask.title == "") {
         console.log("title missing");
         return res.status(400).json({ message: "title missing" });
     }
