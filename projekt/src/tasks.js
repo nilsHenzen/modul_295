@@ -1,4 +1,5 @@
 const express = require('express');
+const session = require('express-session');
 const router = express.Router();
 
 let tasks = [{
@@ -57,10 +58,12 @@ router.post('/tasks', isAuthenticated, (req, res) => {
         return res.status(400).json({ message: "desription missing" });
     }
 
-    if (!newtask.creator) {
+    if(!req.session.mail) {
         console.log("creator missing");
-        return res.status(400).json({ message: "creator missing" });
+        return res.status(400).json({ message: "creator missing" }); 
     }
+
+    newtask.creator = req.session.mail;
 
     let highestId = 0;
     for (const task of tasks) {
