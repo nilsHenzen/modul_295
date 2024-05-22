@@ -28,7 +28,7 @@ const isAuthenticated = (req, res, next) => {
     if (req.session.authenticated) {
         next();
     } else {
-        res.status(401).send('Unauthorized');
+        return res.status(401).json({ message : "unauthorized, login to access" });
     }
 };
 
@@ -37,7 +37,7 @@ router.get('/tasks', isAuthenticated, (req, res) => {
     res.setHeader("Content-Type", "application/json");
     if(tasks.length == 0 ){
         console.log("no tasks found");
-        return res.status(500).json({ message: "no tasks found" })
+        return res.status(500).json({ message: "no tasks found" });
     }
     console.log("get all tasks");
     res.status(200).send(tasks);
