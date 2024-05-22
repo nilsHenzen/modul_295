@@ -7,35 +7,34 @@ let tasks = [{
     "description": "mein Zimmer aufräumen",
     "doneAt": "",
     "creator": "max@mail.com"
-    },
-    {
+},
+{
     "id": 2,
     "title": "putzen",
     "description": "Wohnzimmer putzen",
     "doneAt": "",
     "creator": "hans@mail.ch"
-    },
-    {
+},
+{
     "id": 3,
     "title": "entsorgen",
     "description": "Samstags Müll wegbringen",
     "doneAt": "",
     "creator": "emil@mail.com"
-    }
+}
 ]
 
 const isAuthenticated = (req, res, next) => {
     if (req.session.authenticated) {
         next();
     } else {
-        return res.status(401).json({ message : "unauthorized, login to access" });
+        return res.status(401).json({ message: "unauthorized, login to access" });
     }
 };
 
-
 router.get('/tasks', isAuthenticated, (req, res) => {
     res.setHeader("Content-Type", "application/json");
-    if(tasks.length == 0 ){
+    if (tasks.length == 0) {
         console.log("no tasks found");
         return res.status(500).json({ message: "no tasks found" });
     }
@@ -48,26 +47,26 @@ router.post('/tasks', isAuthenticated, (req, res) => {
 
     res.setHeader("Content-Type", "application/json");
 
-    if(!newtask.title || newtask.title == "") {
+    if (!newtask.title || newtask.title == "") {
         console.log("title missing");
         return res.status(400).json({ message: "title missing" });
     }
 
-    if(!newtask.description) {
+    if (!newtask.description) {
         console.log("description missing");
         return res.status(400).json({ message: "desription missing" });
     }
 
-    if(!newtask.creator) {
+    if (!newtask.creator) {
         console.log("creator missing");
         return res.status(400).json({ message: "creator missing" });
     }
 
     let highestId = 0;
     for (const task of tasks) {
-      if (task.id > highestId) {
-        highestId = task.id;
-      }
+        if (task.id > highestId) {
+            highestId = task.id;
+        }
     }
 
     newtask.id = highestId + 1;
@@ -83,7 +82,7 @@ router.get('/tasks/:id', isAuthenticated, (req, res) => {
     res.setHeader("Content-Type", "application/json");
 
     const task = tasks.find(task => task.id == id);
-    if(task) {
+    if (task) {
         console.log("get single task");
         res.status(200).send(task);
     } else {
@@ -101,22 +100,22 @@ router.put('/tasks/:id', isAuthenticated, (req, res) => {
     res.setHeader("Content-Type", "application/json");
 
     const findTask = tasks.find(task => task.id == id);
-    if(!findTask) {
+    if (!findTask) {
         console.log("task with defined id not found");
         return res.status(404).json({ message: "no task with this id found" });
     }
 
-    if(!updatedTask.title || updatedTask.title == "") {
+    if (!updatedTask.title || updatedTask.title == "") {
         console.log("title missing to update task");
         return res.status(400).json({ message: "title missing" });
     }
 
-    if(!updatedTask.description) {
+    if (!updatedTask.description) {
         console.log("description missing to update task");
         return res.status(400).json({ message: "desription missing" });
     }
 
-    if(!updatedTask.creator) {
+    if (!updatedTask.creator) {
         console.log("creator missing to update task");
         return res.status(400).json({ message: "creator missing" });
     }
@@ -136,7 +135,7 @@ router.delete('/tasks/:id', isAuthenticated, (req, res) => {
     const id = req.params.id;
 
     const findTask = tasks.find(task => task.id == id);
-    if(!findTask) {
+    if (!findTask) {
         console.log("no task with defined id found");
         res.setHeader("Content-Type", "application/json");
         return res.status(404).json({ message: "no task with this id found" });
