@@ -23,6 +23,11 @@ app.use(session({
 app.use('/', tasks);
 app.use('/', authorization);
 
+app.use((req, res) => {
+    console.log("Endpoint not found");
+    res.status(404).json({ message: "Endpoint not found" });
+});
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });
