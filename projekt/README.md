@@ -10,6 +10,10 @@
 - nodemon src/server.js / node src/server.js
 - open at http://localhost:3000
 
+## Tests
+Tests are writen in postman.
+Start with the login test, else every other will return 401 and fail.
+
 ## special packages used
 - validator, to validates mail(https://www.npmjs.com/package/validator)
 
